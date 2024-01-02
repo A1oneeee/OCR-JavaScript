@@ -18,6 +18,8 @@ function genererPieces(pieces){
       descriptionElement.innerText = pieces[i].description ?? "Pas de description pour le moment.";
       const disponibiliteElement = document.createElement("p");
       disponibiliteElement.innerText = pieces[i].disponibilite ? "En stock" : "Rupture de stock";
+      const stockElement = document.createElement("p");
+      stockElement.innerText = pieces[i].disponibilite ? "En stock" : "Rupture de stock";
 
       sectionFiches.appendChild(pieceElement      );
       pieceElement.appendChild( nomElement        );
@@ -25,6 +27,7 @@ function genererPieces(pieces){
       pieceElement.appendChild( prixElement       );
       pieceElement.appendChild( categorieElement  );
       pieceElement.appendChild( descriptionElement);
+      pieceElement.appendChild( stockElement      );
    }
 }
 
@@ -113,15 +116,16 @@ for(let i=0; i < nomsDisponibles.length ; i++){
    disponibleElements.appendChild(nomElement);
 }
 // Ajout de l'en-tête puis de la liste au bloc résultats filtres
-document.querySelector('.disponibles')
-   .appendChild(disponibleElements);
+document.querySelector('.disponibles').appendChild(disponibleElements);
 
 
-// `Prix: ${pieces[i].prix} € (${pieces[i].prix < 35 ? "€" : "€€€"})`
-/*
-map(function (piece){
-	return piece.nom;
-}
-On peut l'écrire sous la forme plus simplifier (fct lambda):
-(piece) => piece.nom;
-*/
+// Filtrer les pièces sans description
+const inputPrixMax = document.querySelector('#prix-max');
+inputPrixMax.addEventListener('input', function(){
+   const piecesFiltrees = pieces.filter(function(piece){
+      return piece.prix <= inputPrixMax.value;
+   });
+   document.querySelector(".fiches").innerHTML = "";
+   genererPieces(piecesFiltrees);
+});
+
